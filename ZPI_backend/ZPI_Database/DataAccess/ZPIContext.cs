@@ -14,6 +14,6 @@ namespace ZPI_Database.DataAccess
         {
 
         }
-        public DbSet<Topic> Topics { get; set; }
+        public DbSet<Topic> Topics { get; set; }    
     }
 }
