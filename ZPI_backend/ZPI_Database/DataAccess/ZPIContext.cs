@@ -22,6 +22,9 @@ namespace ZPI_Database.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Foreign Key SETUP
+
+            // User receiver and sender foreign key setup
             modelBuilder.Entity<User>()
                 .HasMany(u => u.MessagesSent)
                 .WithOne(ms => ms.Sender)
@@ -30,6 +33,16 @@ namespace ZPI_Database.DataAccess
             modelBuilder.Entity<User>()
                 .HasMany(u => u.MessagesReceived)
                 .WithOne(ms => ms.Receiver);
+
+            // Promoter with team foreign key setup
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Teams)
+                .WithOne(t => t.Promoter);
+
+            // Students with team setup foreign key setup
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Team)
+                .WithMany(t => t.Students);
         }
     }
 }
