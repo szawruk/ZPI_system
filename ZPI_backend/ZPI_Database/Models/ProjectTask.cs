@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ZPI_Database.Models
 {
-    public class Task
+    public class ProjectTask
     {
         [Key]
         public int Id { get; set; }
@@ -34,11 +34,11 @@ namespace ZPI_Database.Models
 
         // Foreign Keys
 
-        // 1 : N relationship with student(User)
+        // Task 1 : N relationship with student(User)
         [ForeignKey("StudentId")]
         public User Student { get; set; }
 
-        // 1 : N relationship with team(Team)
+        // Task 1 : N relationship with team(Team)
         [ForeignKey("TeamId")]
         public Team Team { get; set; }
     }

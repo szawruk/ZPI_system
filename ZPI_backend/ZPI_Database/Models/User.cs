@@ -60,7 +60,7 @@ namespace ZPI_Database.Models
         public ICollection<Team> Teams { get; set; }
 
         // User 1 : N relationship with tasks(Task)
-        public ICollection<Task> Tasks { get; set; }
+        public ICollection<ProjectTask> Tasks { get; set; }
 
         // User(sender) 1 : N relationship with sent messages(Message)
         public ICollection<Message> MessagesSent { get; set; }

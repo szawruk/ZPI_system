@@ -45,7 +45,7 @@ namespace ZPI_Database.Models
         public ICollection<User> Students { get; set; }
 
         // Team 1 : N relationship with tasks(Task)
-        public ICollection<Task> Tasks { get; set; }
+        public ICollection<ProjectTask> Tasks { get; set; }
 
         // Team 1 : N relationship with messages(Message)
         public ICollection<Message> Messages { get; set; }
