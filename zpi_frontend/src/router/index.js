@@ -4,14 +4,9 @@ import MainPage from "@/components/MainPage.vue";
 
 const routes = [
     {
-        path: "/agon",
-        name: "Agon",
-        component: MainPage,
-    },
-    {
         path: "/",
         name: "Home",
-        component: HelloWorld,
+        component: MainPage,
     },
     
 ];

@@ -1,7 +1,24 @@
 <template>
     <div class="main-page">
         <div class="container">
-            Siemanko agonek
+           <p>
+             Witamy nna stronie testowo tutajj tekst!
+           </p>
+           <p>
+             Witamy nna stronie testowo tutajj tekst!
+           </p>
+           <p>
+             Witamy nna stronie testowo tutajj tekst!
+           </p>
+           <p>
+             Witamy nna stronie testowo tutajj tekst!
+           </p>
+           <p>
+             Witamy nna stronie testowo tutajj tekst!
+           </p>
+           <p>
+             Witamy nna stronie testowo tutajj tekst!
+           </p>
         </div>
     </div>
 </template>
@@ -16,10 +33,13 @@
     .main-page {
         width: 100%;
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
+      margin:30px 50px 0;
     
     }
     .container {
         color: red;
+      font-weight: bold;
+      font-size: 25px;
     }
 </style>
