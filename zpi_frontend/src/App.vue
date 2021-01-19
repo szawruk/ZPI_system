@@ -1,7 +1,7 @@
 <template>
     <div class="page">
       <Header/>
-      <div class="page-wrapper">
+      <div class="page-wrapper" :style="cssVars">
         <router-view/>
       </div>
     </div>
@@ -14,7 +14,17 @@ import Header from "@/components/Header";
 
 export default {
   name: 'App',
-  components: {Header}
+  components: {Header},
+  computed: {
+    cssVars() {
+      return {
+        '--bg-block-color': '#131822',
+        '--border-color-1': '#30363d',
+        '--border-color-2': '#777676',
+      }
+    }
+  }
+
 }
 </script>
 
@@ -70,6 +80,7 @@ body {
 html, body {
   width: 100%;
   height: 100%;
+  background-color: #0d1117;
 }
 
 * {
@@ -78,5 +89,11 @@ html, body {
 
 b, strong, .bold {
   font-weight: bold;
+}
+
+.page-wrapper{
+  max-width: 1350px;
+  margin: 0 auto;
+
 }
 </style>

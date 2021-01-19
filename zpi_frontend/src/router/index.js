@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
-import HelloWorld from "@/components/HelloWorld.vue";
 import MainPage from "@/components/MainPage.vue";
+import Teams from "@/components/Teams";
+import Topics from "@/components/Topics";
 
 const routes = [
     {
@@ -8,6 +9,17 @@ const routes = [
         name: "Home",
         component: MainPage,
     },
+    {
+        path: "/teams",
+        name: "Teams",
+        component: Teams,
+    },
+    {
+        path: "/topics",
+        name: "Topics",
+        component: Topics,
+    },
+
     
 ];
 

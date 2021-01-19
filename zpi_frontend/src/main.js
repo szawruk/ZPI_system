@@ -3,7 +3,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store/store'
 
-import HelloWorld from "@/components/HelloWorld.vue";
 import MainPage from "@/components/MainPage.vue";
 
 const app = createApp(App)

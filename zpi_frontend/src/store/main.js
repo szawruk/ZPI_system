@@ -1,12 +1,16 @@
 export default {
     namespaced: true,
-    state:{
-
+    state: {
+        userLoggedIn: false
     },
-    mutations:{
-
+    mutations: {
+        userLogin(state, payload){
+            state.userLoggedIn = payload
+        }
     },
-    actions:{
-
+    actions: {
+        userLogin({commit, state}){
+            // TODO login axios
+        }
     }
 }
