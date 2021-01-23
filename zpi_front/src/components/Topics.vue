@@ -1,5 +1,6 @@
 <template>
   <div class="topics">
+    <add-new :method="() =>this.$router.push('/topics/new')"/>
     <div class="topic" v-for="topic in topicsList" :key="topic.topic">
       <div class="topic-image">
         <img src="https://www.nicepng.com/png/full/517-5178467_png-file-svg-topic-icon-png.png" alt="topic"/>
@@ -17,8 +18,13 @@
 </template>
 
 <script>
+import AddNew from "@/components/controls/AddNew";
+
 export default {
   name: "Topics",
+  components: {
+    AddNew
+  },
   computed: {
     topicsList() {
       return this.$store.state.topics.topicsList
@@ -30,7 +36,7 @@ export default {
 <style scoped lang="scss">
 .topics {
   width: 100%;
-  margin-top: 50px;
+  margin-top: 30px;
 
   .topic {
     height: 150px;
@@ -46,10 +52,11 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      img{
+
+      img {
         height: 80px;
         object-fit: cover;
-      filter: invert(96%) sepia(10%) saturate(1236%) hue-rotate(61deg) brightness(99%) contrast(88%);
+        filter: invert(96%) sepia(10%) saturate(1236%) hue-rotate(61deg) brightness(99%) contrast(88%);
       }
     }
 
@@ -71,8 +78,6 @@ export default {
         width: 100%;
         padding: 10px;
       }
-
-
     }
   }
 

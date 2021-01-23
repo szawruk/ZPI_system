@@ -1,5 +1,6 @@
 <template>
-  <div class="teams">
+  <div class="teams" >
+    <add-new :method="() =>this.$router.push('/teams/new')"/>
     <div class="team" v-for="team in teamsList" :key="team.team">
       <div class="team-image">
         <img src="../assets/team.png" alt="team"/>
@@ -23,20 +24,25 @@
 </template>
 
 <script>
+import AddNew from "@/components/controls/AddNew";
+
 export default {
   name: "Teams",
+  components:{
+    AddNew
+  },
   computed: {
     teamsList() {
       return this.$store.state.teams.teamsList
     }
-  }
+  },
 }
 </script>
 
 <style scoped lang="scss">
 .teams {
   width: 100%;
-  margin-top: 50px;
+  margin-top: 30px;
 
   .team {
     height: 150px;

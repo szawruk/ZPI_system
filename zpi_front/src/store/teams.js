@@ -1,3 +1,6 @@
+import axios from "axios";
+import router from "@/router";
+
 export default {
     namespaced: true,
     state: {
@@ -31,6 +34,13 @@ export default {
     actions: {
         getTeamsList({commit, state}) {
             // TODO axios
+        },
+        saveTeam({commit}, data){
+            axios.post('/api/teams',{name: data.nameText, description: data.descriptionText, topicId: data.topicId})
+                .then(response => {
+                    console.log(response)
+                    router.push('/topics').then()
+                })
         }
     }
 }
