@@ -42,6 +42,38 @@ namespace Backend.Controllers
             return topic;
         }
 
+        // GET: api/Topics/5/teams
+        [HttpGet("{id}/teams")]
+        public async Task<ActionResult<Topic>> GetTopicTeams(int id)
+        {
+            var topic = await _context.Topics.FindAsync(id);
+            topic.Teams = _context.Teams.Where(x => x.TopicId == id).ToList();
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            return topic;
+        }
+
+        // GET: api/Topics/5/teams/users
+        [HttpGet("{id}/teams/users")]
+        public async Task<ActionResult<Topic>> GetTopicTeamsUsers(int id)
+        {
+            var topic = await _context.Topics.FindAsync(id);
+            topic.Teams = _context.Teams.Where(x => x.TopicId == id).ToList();
+            foreach(var team in topic.Teams)
+            {
+                team.Students = _context.Users.Where(x => x.TeamId == team.Id).ToList();
+            }
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            return topic;
+        }
+
         // PUT: api/Topics/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.

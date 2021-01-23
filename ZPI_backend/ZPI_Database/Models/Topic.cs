@@ -24,6 +24,6 @@ namespace ZPI_Database.Models
         // Collections
 
         // Topic 1: N relationship with teams(Team) that are doing this topic
-        public ICollection<Team> Teams { get; set; }
+        public ICollection<Team> Teams { get; set; } = new List<Team>();
     }
 }

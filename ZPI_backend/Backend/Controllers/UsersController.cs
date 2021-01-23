@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Backend.Acefb9Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -48,9 +49,14 @@ namespace Backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+
             if (id != user.Id)
             {
-                return BadRequest();
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
 
             _context.Entry(user).State = EntityState.Modified;
@@ -80,7 +86,25 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+
+            if (user.AccountType != AccountType.stud.ToString()&&
+                user.AccountType != AccountType.work.ToString())
+            {
+                ModelState.AddModelError("", "Błąd przy wyborze rodzaju konta");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+
             _context.Users.Add(user);
+            if (user.Id == 0)
+            {
+                ModelState.AddModelError("", "Powtarzający się email");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Backend.Acefb9Utils;
+using Backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,11 +23,32 @@ namespace Backend.Controllers
             _context = context;
         }
 
-        // GET: api/ProjectTasks
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProjectTask>>> GetTasks()
+        // GET: api/ProjectTasks/2/1
+        [HttpGet("{teamId}/{userId}")]
+        public async Task<ActionResult<IEnumerable<ProjectTask>>> GetTasks(int teamId, int userId)
         {
-            return await _context.Tasks.ToListAsync();
+            var user = await _context.Users.FirstOrDefaultAsync(t => t.TeamId == teamId);
+
+            if(user == null)
+            {
+                ModelState.AddModelError("", "Nie masz dostępu do tego zespołu");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+
+            var tasks = _context.Tasks.Where(t => t.TeamId == teamId);
+
+            if (tasks == null)
+            {
+                ModelState.AddModelError("", "Zespół o  takim id nie istnieje");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+
+            foreach(var task in tasks)
+            {
+                task.Student.Tasks = null;
+            }
+
+            return tasks.ToList();
         }
 
         // GET: api/ProjectTasks/5
@@ -78,12 +101,29 @@ namespace Backend.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<ProjectTask>> PostProjectTask(ProjectTask projectTask)
+        public async Task<ActionResult<ProjectTask>> PostProjectTask(TaskTeamStudent taskTeamStudent)
         {
-            _context.Tasks.Add(projectTask);
+            taskTeamStudent.projectTask.Finished = false;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+
+            var user = await  _context.Users.FirstOrDefaultAsync(
+                x => x.Id == taskTeamStudent.StudentId && x.TeamId == taskTeamStudent.TeamId);
+
+            if(user == null)
+            {
+                ModelState.AddModelError("", "Wygasła sesja, zaloguj się ponownie");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+            taskTeamStudent.projectTask.Student = user;
+            taskTeamStudent.projectTask.TeamId = user.TeamId;
+
+            _context.Tasks.Add(taskTeamStudent.projectTask);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProjectTask", new { id = projectTask.Id }, projectTask);
+            return CreatedAtAction("GetProjectTask", new { id = taskTeamStudent.projectTask.Id }, taskTeamStudent.projectTask);
         }
 
         // DELETE: api/ProjectTasks/5

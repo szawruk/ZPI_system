@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Backend.Acefb9Utils;
+using Backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -48,9 +50,15 @@ namespace Backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTeam(int id, Team team)
         {
+            if (!ModelState.IsValid)
+            {
+                string error = ErrorFunctionality.ErrorsToString(ModelState.Values);
+                return BadRequest(new { StatusCode = 400, error });
+            }
             if (id != team.Id)
             {
-                return BadRequest();
+                ModelState.AddModelError("", "");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
 
             _context.Entry(team).State = EntityState.Modified;
@@ -78,12 +86,32 @@ namespace Backend.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Team>> PostTeam(Team team)
+        public async Task<ActionResult<Team>> PostTeam(TeamStudentTopic tsT)
         {
-            _context.Teams.Add(team);
-            await _context.SaveChangesAsync();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+            var student = await _context.Users.FindAsync(tsT.StudentId);
+            var topic = await _context.Topics.FindAsync(tsT.TopicId);
 
-            return CreatedAtAction("GetTeam", new { id = team.Id }, team);
+            if (student == null) {
+                ModelState.AddModelError("","Wygasła sesja, zaloguj się ponownie");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+
+            if (student.AccountType != AccountType.stud.ToString())
+            {
+                ModelState.AddModelError("", "Twój rodzaj konta nie może wykonać tej operacji");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+
+            tsT.Team.Students.Add(student);
+            tsT.Team.Topic = topic;
+            _context.Teams.Add(tsT.Team);
+            await _context.SaveChangesAsync();
+            
+            return CreatedAtAction("GetTeam", new { id = tsT.Team.Id }, tsT.Team);
         }
 
         // DELETE: api/Teams/5
