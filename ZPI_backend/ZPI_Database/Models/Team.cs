@@ -27,7 +27,7 @@ namespace ZPI_Database.Models
         public string Description { get; set; }
 
         [Required]
-        public bool Open { get; set; }
+        public bool Open { get; set; } = false;
 
         // Foreign Keys
 
@@ -42,12 +42,12 @@ namespace ZPI_Database.Models
         // Collections
 
         // Team 1 : N relationship with studens(User)
-        public ICollection<User> Students { get; set; }
+        public ICollection<User> Students { get; set; } = new List<User>();
 
         // Team 1 : N relationship with tasks(Task)
-        public ICollection<ProjectTask> Tasks { get; set; }
+        public ICollection<ProjectTask> Tasks { get; set; } = new List<ProjectTask>();
 
         // Team 1 : N relationship with messages(Message)
-        public ICollection<Message> Messages { get; set; }
+        public ICollection<Message> Messages { get; set; } = new List<Message>();
     }
 }
