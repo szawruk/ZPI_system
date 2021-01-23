@@ -1,6 +1,6 @@
 <template>
-  <div class="header">
-    <img src="../assets/logo_zpi.jpg" class="logo"/>
+  <div class="header" >
+    <img src="../assets/logo_zpi.jpg" class="logo" @click="$router.push('/')" alt="logo"/>
     <div class="header-buttons">
       <div v-if="userLoggedIn">
         Wiadomości
@@ -50,10 +50,10 @@ export default {
       }
     },
     openTeams() {
-      this.$router.push('teams')
+      this.$router.push('/teams')
     },
     openTopics() {
-      this.$router.push('topics')
+      this.$router.push('/topics')
     }
   }
 }
@@ -74,6 +74,8 @@ export default {
   .logo {
     height: 100%;
     margin-left: 50px;
+    border-radius: 20%;
+    cursor: pointer;
   }
 
   .header-buttons {
