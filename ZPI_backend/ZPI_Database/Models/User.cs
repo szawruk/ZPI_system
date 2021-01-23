@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace ZPI_Database.Models
 {
+    public enum AccountType
+    {
+        stud,
+        work
+    }
     public class User
     {
         [Key]
@@ -57,15 +62,15 @@ namespace ZPI_Database.Models
         // Collections
 
         // User 1 : N relationship with teams(Team) for promotor AccountType
-        public ICollection<Team> Teams { get; set; }
+        public ICollection<Team> Teams { get; set; } = new List<Team>();
 
         // User 1 : N relationship with tasks(Task)
-        public ICollection<ProjectTask> Tasks { get; set; }
+        public ICollection<ProjectTask> Tasks { get; set; } = new List<ProjectTask>();
 
         // User(sender) 1 : N relationship with sent messages(Message)
-        public ICollection<Message> MessagesSent { get; set; }
+        public ICollection<Message> MessagesSent { get; set; } = new List<Message>();
 
         // User(receiver) 1 : N relationship with received messages(Message)
-        public ICollection<Message> MessagesReceived { get; set; }
+        public ICollection<Message> MessagesReceived { get; set; } = new List<Message>();
     }
 }

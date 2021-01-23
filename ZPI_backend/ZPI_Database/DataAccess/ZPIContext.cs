@@ -43,6 +43,10 @@ namespace ZPI_Database.DataAccess
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Team)
                 .WithMany(t => t.Students);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
         }
     }
 }
