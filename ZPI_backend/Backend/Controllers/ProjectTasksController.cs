@@ -23,9 +23,9 @@ namespace Backend.Controllers
             _context = context;
         }
 
-        // GET: api/ProjectTasks/2/1
-        [HttpGet("{teamId}/{userId}")]
-        public async Task<ActionResult<IEnumerable<ProjectTask>>> GetTasks(int teamId, int userId)
+        // GET: api/ProjectTasks/Team/2
+        [HttpGet("Team/{teamId}")]
+        public async Task<ActionResult<IEnumerable<ProjectTask>>> GetTasks(int teamId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(t => t.TeamId == teamId);
 

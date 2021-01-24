@@ -27,7 +27,7 @@ namespace Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
         {
-            return await _context.Teams.ToListAsync();
+            return await _context.Teams.Include(x => x.Topic).Include(x => x.Promoter).ToListAsync();
         }
 
         // GET: api/Teams/5
