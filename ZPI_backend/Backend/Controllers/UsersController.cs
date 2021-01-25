@@ -97,14 +97,14 @@ namespace Backend.Controllers
                 ModelState.AddModelError("", "Błąd przy wyborze rodzaju konta");
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
-
-            _context.Users.Add(user);
-            if (user.Id == 0)
+            
+            if (_context.Users.Any(x => x.Email == user.Email))
             {
                 ModelState.AddModelError("", "Powtarzający się email");
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
 
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
