@@ -4,16 +4,17 @@ import router from "@/router";
 export default {
     namespaced: true,
     state: {
-        teamsList: []
+        selectedMenuOptions: 1,
+        tasksList: []
     },
     mutations: {
-        setTeamsList(state, payload) {
-            state.teamsList = payload
+        setSelectedMenuOptions(state, payload) {
+            state.selectedMenuOptions = payload
         }
     },
     actions: {
-        getTeamsList({commit, state}) {
-            axios.get('/api/teams')
+        getTasks({commit, state}) {
+            axios.get('/api/users')
                 .then(response => {
                     if (response.status === 200) {
                         console.log(response.data)

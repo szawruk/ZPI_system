@@ -11,6 +11,9 @@
       <div v-if="userLoggedIn" @click="openTopics" :class="topicsSelected ? 'selected' : '' ">
         Tematy
       </div>
+      <div v-if="userLoggedIn" @click="openMyTeam" :class="myTeamSelected ? 'selected' : '' ">
+        Mój zespół
+      </div>
       <div v-if="userLoggedIn">
         Moje konto
       </div>
@@ -39,6 +42,9 @@ export default {
     },
     topicsSelected() {
       return this.$route.name === 'Topics'
+    },
+    myTeamSelected() {
+      return this.$route.name === 'MyTeam'
     }
 
   },
@@ -54,6 +60,9 @@ export default {
     },
     openTopics() {
       this.$router.push('/topics')
+    },
+    openMyTeam() {
+      this.$router.push('/my-team')
     }
   }
 }
@@ -74,7 +83,7 @@ export default {
   .logo {
     height: 100%;
     margin-left: 50px;
-    border-radius: 20%;
+    border-radius: 15px;
     cursor: pointer;
   }
 
@@ -94,7 +103,7 @@ export default {
       font-size: 20px;
       cursor: pointer;
       transition: all ease-in-out .2s;
-      border-radius: 15%;
+      border-radius: 10px;
 
       &:hover, &.selected {
         background-color: #727272;

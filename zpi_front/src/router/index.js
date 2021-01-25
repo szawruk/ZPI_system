@@ -4,6 +4,7 @@ import Teams from "@/components/Teams";
 import Topics from "@/components/Topics";
 import CreateTopic from "@/components/CreateTopic";
 import CreateTeam from "@/components/CreateTeam";
+import MyTeam from "@/components/MyTeam";
 import Vue from 'vue'
 
 Vue.use(VueRouter)
@@ -33,6 +34,11 @@ const routes = [
         path: "/topics",
         name: "Topics",
         component: Topics,
+    },
+    {
+        path: "/my-team",
+        name: "MyTeam",
+        component: MyTeam,
     },
 
 

@@ -19,7 +19,7 @@
       <div class="label">
         Temat:
       </div>
-      <v-select :options="$store.state.topics.topicsList" label="topic" class="style-chooser"/>
+      <v-select v-model="selected" :options="topicsList" label="name"  class="style-chooser"/>
     </div>
 
     <div class="submit-button" @click="saveTeam()">
@@ -35,23 +35,27 @@ export default {
   name: "CreateTeam",
   data() {
     return {
-      lala: 1
+      selected: null
     }
   },
   components: {
     vSelect
   },
   computed: {
-    optionss() {
-      return []
+    topicsList() {
+      return this.$store.state.topics.topicsList
     }
   },
   methods: {
     saveTeam() {
+      let topicId = this.selected ? this.selected.id : null;
       let nameTextBox = this.$refs.nameText
       let descriptionTextBox = this.$refs.descriptionText
-      // this.$store.dispatch('teams/saveTeam', {teamText: teamTextBox.value, descriptionText: descriptionTextBox.value})
+      this.$store.dispatch('teams/saveTeam', {teamText: nameTextBox.value, descriptionText: descriptionTextBox.value, topicId: topicId})
     }
+  },
+  mounted() {
+    this.$store.dispatch('topics/getTopicsList')
   }
 }
 </script>

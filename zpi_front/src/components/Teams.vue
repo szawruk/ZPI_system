@@ -1,7 +1,7 @@
 <template>
-  <div class="teams" >
+  <div class="teams">
     <add-new :method="() =>this.$router.push('/teams/new')"/>
-    <div class="team" v-for="team in teamsList" :key="team.team">
+    <div class="team" v-for="team in teamsList" :key="team.name" @click="openTeam(team.id)">
       <div class="team-image">
         <img src="../assets/team.png" alt="team"/>
       </div>
@@ -28,7 +28,7 @@ import AddNew from "@/components/controls/AddNew";
 
 export default {
   name: "Teams",
-  components:{
+  components: {
     AddNew
   },
   computed: {
@@ -36,9 +36,14 @@ export default {
       return this.$store.state.teams.teamsList
     }
   },
-mounted() {
-  this.$store.dispatch('teams/getTeamsList')
-}
+  methods: {
+    openTeam(id) {
+      this.$router.push('/teams/' + id)
+    }
+  },
+  mounted() {
+    this.$store.dispatch('teams/getTeamsList')
+  }
 }
 </script>
 
@@ -54,6 +59,12 @@ mounted() {
     margin-bottom: 30px;
     display: flex;
     background-color: var(--bg-block-color);
+    transition: all .3s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--bg-block-hover);
+    }
 
     .team-image {
       flex: 2;
@@ -80,7 +91,7 @@ mounted() {
       .team-header {
         display: flex;
 
-        div{
+        div {
           display: flex;
           justify-content: center;
           border-bottom: solid 1px var(--border-color-2);
