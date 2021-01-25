@@ -55,7 +55,9 @@ namespace Backend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProjectTask>> GetProjectTask(int id)
         {
-            var projectTask = await _context.Tasks.FindAsync(id);
+            var projectTask = await _context.Tasks.Include(pt => pt.Student).Include(pt => pt.Team).FirstOrDefaultAsync(pt => pt.Id == id);
+            projectTask.Team.Students = null;
+            projectTask.Student.Team = null;
 
             if (projectTask == null)
             {
