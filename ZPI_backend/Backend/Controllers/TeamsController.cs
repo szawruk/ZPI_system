@@ -34,7 +34,49 @@ namespace Backend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Team>> GetTeam(int id)
         {
-            var team = await _context.Teams.FindAsync(id);
+            var team = await _context.Teams
+                .Include(t => t.Tasks)
+                .Include(t => t.Students)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            foreach(var stud in team.Students)
+            {
+                stud.Team = null;
+            }
+
+            foreach (var task in team.Tasks)
+            {
+                task.Student.Tasks = null;
+            }
+
+            if (team == null)
+            {
+                return NotFound();
+            }
+
+            return team;
+        }
+
+        // GET: api/Teams/myTeam/5
+        [HttpGet("myTeam/{id}")]
+        public async Task<ActionResult<Team>> GetTeamOfStudent(int id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+
+            //var team = await _context.Teams.Include(t => t.Tasks);
+            if (user.Team == null)
+            {
+                return NotFound();
+            }
+
+            return user.Team;
+        }
+
+        // GET: api/Teams/5/users
+        [HttpGet("{id}/users")]
+        public async Task<ActionResult<Team>> GetTeamWithStudents(int id)
+        {
+            var team = await _context.Teams.Include(t => t.Students).FirstOrDefaultAsync(t => t.Id == id);
 
             if (team == null)
             {
