@@ -1,4 +1,6 @@
 import axios from "axios";
+import {axiosBaseUrl} from "@/config/config";
+axios.defaults.baseURL = axiosBaseUrl
 import router from "@/router";
 
 export default {
@@ -7,22 +9,22 @@ export default {
         topicsList: [
             {
                 id: 1,
-                topic: 'temat1',
+                name: 'temat1',
                 description: "opis1",
             },
             {
                 id: 2,
-                topic: 'temat2',
+                name: 'temat2',
                 description: "opis2",
             },
             {
                 id: 3,
-                topic: 'temat3',
+                name: 'temat3',
                 description: "opis3",
             },
             {
                 id: 4,
-                topic: 'temat4',
+                name: 'temat4',
                 description: "opis4",
             }]
     },
@@ -32,11 +34,17 @@ export default {
         }
     },
     actions: {
-        getTopicsList({commit, state}) {
-            // TODO axios
+        getTopicsList({commit}) {
+            axios.get('/api/topics')
+                .then(response => {
+                    if(response.status === 200){
+                        console.log(response.data)
+                        commit('setTopicsList', response.data)
+                    }
+                })
         },
         saveTopic({commit}, data) {
-            axios.post('/api/topics', {name: data.topicText, description: data.descriptionText})
+            axios.post('/api/topics', {Name: data.topicText, Description: data.descriptionText})
                 .then(response => {
                     console.log(response)
                     router.push('/topics').then()

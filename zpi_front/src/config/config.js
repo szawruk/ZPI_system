@@ -1,0 +1,1 @@
+export const axiosBaseUrl = 'https://localhost:44328'

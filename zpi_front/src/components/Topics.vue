@@ -7,7 +7,7 @@
       </div>
       <div class="topic-content">
         <div class="topic-name">
-          {{ topic.topic }}
+          {{ topic.name }}
         </div>
         <div class="topic-description">
           {{ topic.description }}
@@ -29,6 +29,9 @@ export default {
     topicsList() {
       return this.$store.state.topics.topicsList
     }
+  },
+  mounted() {
+    this.$store.dispatch('topics/getTopicsList')
   }
 }
 </script>

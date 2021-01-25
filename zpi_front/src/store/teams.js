@@ -4,27 +4,7 @@ import router from "@/router";
 export default {
     namespaced: true,
     state: {
-        teamsList: [
-            {
-                name: 'nazwa1',
-                topic: 'temat1',
-                description: "opis1",
-            },
-            {
-                name: 'nazwa2',
-                topic: 'temat2',
-                description: "opis2",
-            },
-            {
-                name: 'nazwa3',
-                topic: 'temat3',
-                description: "opis3",
-            },
-            {
-                name: 'nazwa4',
-                topic: 'temat4',
-                description: "opis4",
-            }]
+        teamsList: []
     },
     mutations: {
         setTeamsList(state, payload) {
@@ -33,7 +13,13 @@ export default {
     },
     actions: {
         getTeamsList({commit, state}) {
-            // TODO axios
+            axios.get('/api/teams')
+                .then(response => {
+                    if(response.status === 200){
+                        console.log(response.data)
+                        commit('setTeamsList', response.data)
+                    }
+                })
         },
         saveTeam({commit}, data){
             axios.post('/api/teams',{name: data.nameText, description: data.descriptionText, topicId: data.topicId})

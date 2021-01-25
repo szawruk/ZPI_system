@@ -11,7 +11,7 @@
             {{ team.name }}
           </div>
           <div class="team-topic">
-            {{ team.topic }}
+            {{ team.topic.name }}
           </div>
         </div>
 
@@ -36,6 +36,9 @@ export default {
       return this.$store.state.teams.teamsList
     }
   },
+mounted() {
+  this.$store.dispatch('teams/getTeamsList')
+}
 }
 </script>
 
