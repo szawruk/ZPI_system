@@ -2,23 +2,27 @@
     <div class="main-page">
         <div class="container">
            <p>
-             Witamy nna stronie testowo tutajj tekst!
+             Witamy na stronie ZPI!
            </p>
            <p>
-             Witamy nna stronie testowo tutajj tekst!
+             Witamy na stronie ZPI!
            </p>
            <p>
-             Witamy nna stronie testowo tutajj tekst!
+             Witamy na stronie ZPI!
            </p>
            <p>
-             Witamy nna stronie testowo tutajj tekst!
+             Witamy na stronie ZPI!
            </p>
            <p>
-             Witamy nna stronie testowo tutajj tekst!
+             Witamy na stronie ZPI!
            </p>
            <p>
-             Witamy nna stronie testowo tutajj tekst!
+             Witamy na stronie ZPI!
            </p>
+           <p>
+             Witamy na stronie ZPI!
+           </p>
+
         </div>
     </div>
 </template>

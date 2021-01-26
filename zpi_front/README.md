@@ -1,4 +1,4 @@
-# zpi_frontend
+# zpi_front
 
 ## Project setup
 ```
