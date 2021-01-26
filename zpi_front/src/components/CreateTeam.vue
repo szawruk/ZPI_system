@@ -95,6 +95,7 @@ export default {
       justify-content: center;
       align-items: center;
       height: 50px;
+      min-width: 120px;
       margin-right: 20px;
     }
 

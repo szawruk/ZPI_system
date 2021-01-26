@@ -1,11 +1,15 @@
 export default {
     namespaced: true,
     state: {
-        userLoggedIn: false
+        userLoggedIn: false,
+        userTeamId: 0
     },
     mutations: {
         userLogin(state, payload){
             state.userLoggedIn = payload
+        },
+        setUserTeamId(state, payload){
+            state.userTeamId = payload
         }
     },
     actions: {

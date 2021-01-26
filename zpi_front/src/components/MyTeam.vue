@@ -9,29 +9,29 @@
       </div>
     </div>
     <template v-if="selectedMenuOption === 1">
-      <add-new :method="() =>this.$router.push('/tasks/new')"/>
-      <div class="task" v-for="task in tasksList" :key="task.id">
+      <add-new :method="() =>this.$router.push('my-team/tasks/new')"/>
+      <div class="task" v-for="(task, index) in tasksList" :key="task.id">
         <div class="task-image">
           <img src="https://www.nicepng.com/png/full/815-8157090_png-file-task-manager-icon-png.png" alt="topic"/>
         </div>
         <div class="task-content">
           <div class="task-content-top">
             <div class="task-number">
-              {{ topic.name }}
+              <span class="label">Numer:</span> {{ index + 1 }}
             </div>
             <div class="task-name">
-              {{ topic.name }}
+              <span class="label">Nazwa:</span>{{ task.name }}
             </div>
-            <div class="topic-deadline">
-              {{ topic.description }}
+            <div class="task-deadline">
+              <span class="label">Deadline:</span>{{ task.deadline }}
             </div>
           </div>
           <div class="task-content-bottom">
-            <div class="task-name">
-              {{ topic.person }}
+            <div class="task-person">
+              <span class="label">Autor:</span> {{ task.student.name +' ' + task.student.surname }}
             </div>
-            <div class="topic-deadline">
-              {{ topic.description }}
+            <div class="task-description">
+              <span class="label">Opis:</span>{{ task.description }}
             </div>
           </div>
 
@@ -93,7 +93,7 @@ export default {
     display: flex;
     font-size: 22px;
     background-color: #161b22;
-    height: 70px;
+    height: 50px;
     border-radius: 10px;
     margin-bottom: 30px;
 
@@ -116,6 +116,79 @@ export default {
         }
       }
     }
+  }
+
+  .task {
+    height: 150px;
+    border: solid 2px var(--border-color-1);
+    background-color: var(--bg-block-color);
+    padding: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    color: white;
+
+    .task-image {
+      flex: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        height: 80px;
+        object-fit: cover;
+        filter: invert(96%) sepia(10%) saturate(1236%) hue-rotate(61deg) brightness(99%) contrast(88%);
+      }
+    }
+
+    .task-content {
+      flex: 14;
+      display: flex;
+      flex-direction: column;
+
+      .label{
+        color: #929292;
+        margin-right: 6px;
+      }
+
+      .task-content-top {
+        flex: 1;
+        display: flex;
+        margin-bottom: 10px;
+
+        div{
+          display: flex;
+          justify-content: center;
+          border-bottom: solid 1px var(--border-color-2);
+        }
+
+        .task-number{
+          width: 50px;
+          justify-content: flex-start;
+        }
+        .task-name{
+          flex: 6;
+        }
+        .task-deadline{
+          flex: 6;
+        }
+
+      }
+
+      .task-content-bottom {
+        flex: 2;
+        display: flex;
+        align-items: center;
+
+        .task-person{
+          flex: 1;
+        }
+        .task-description{
+          flex: 4;
+        }
+      }
+    }
+
+
   }
 }
 </style>

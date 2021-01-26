@@ -77,7 +77,7 @@ export default {
       flex: 4;
       word-wrap: break-word;
       word-break: break-all;
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: var(--bg-color);
       resize: none;
       padding: 10px;
     }

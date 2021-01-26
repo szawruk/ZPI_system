@@ -5,6 +5,7 @@ import Topics from "@/components/Topics";
 import CreateTopic from "@/components/CreateTopic";
 import CreateTeam from "@/components/CreateTeam";
 import MyTeam from "@/components/MyTeam";
+import CreateTask from "@/components/CreateTask";
 import Vue from 'vue'
 
 Vue.use(VueRouter)
@@ -39,6 +40,11 @@ const routes = [
         path: "/my-team",
         name: "MyTeam",
         component: MyTeam,
+    },
+    {
+        path: "/my-team/tasks/new",
+        name: "CreateTask",
+        component: CreateTask,
     },
 
 

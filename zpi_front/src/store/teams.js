@@ -34,6 +34,7 @@ export default {
                     console.log(response)
                     router.push('/topics').then()
                 })
-        }
+        },
+
     }
 }
