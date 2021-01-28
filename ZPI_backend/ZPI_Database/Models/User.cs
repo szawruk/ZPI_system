@@ -53,6 +53,10 @@ namespace ZPI_Database.Models
         [Column(TypeName = "VARCHAR(10)")]
         public string Faculty { get; set; }
 
+        [Column(TypeName = "VARCHAR(1024)")]
+        public string Token { get; set; }
+
+
         // Foreign Keys
 
         // User N : 1 relationship with team(Team)

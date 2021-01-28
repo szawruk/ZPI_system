@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ZPI_Database.DataAccess;
+using ZPI_Database.Models;
 
 namespace Backend.Controllers
 {
@@ -30,7 +31,7 @@ namespace Backend.Controllers
             _context = context;
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> Post(UserLogin _userData)
         {
 
@@ -59,6 +60,8 @@ namespace Backend.Controllers
 
                     var finalToken = new JwtSecurityTokenHandler().WriteToken(token);
 
+                    user.Token = finalToken;
+
                     return Ok(finalToken);
                 }
                 else
@@ -72,11 +75,19 @@ namespace Backend.Controllers
             }
         }
 
-        private async Task<UserLoginJwt> GetUser(string email, string password)
+        [HttpGet("logout")]
+        [Authorize]
+        public async Task Logout()
+        {
+            var authHeader = Request.Headers["Authorization"];
+            var x = 2;
+        }
+
+        private async Task<User> GetUser(string email, string password)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
             if (user != null)
-                return new UserLoginJwt(user);
+                return user;
             return null;
         }
     }
