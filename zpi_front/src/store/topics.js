@@ -44,12 +44,10 @@ export default {
                 })
         },
         saveTopic({commit}, data) {
-            axios.post('/api/topicss', {
-
-
-            }).then(response => {
+            axios.post('/api/topics', {Name: data.topicText, Description: data.descriptionText})
+                .then(response => {
                     console.log(response)
-                    router.push('/teams').then()
+                    router.push('/topics').then()
                 })
         }
     }

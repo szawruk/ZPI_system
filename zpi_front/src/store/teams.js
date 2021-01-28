@@ -32,7 +32,7 @@ export default {
             })
                 .then(response => {
                     console.log(response)
-                    router.push('/topics').then()
+                    router.push('/teams').then()
                 })
         },
 
