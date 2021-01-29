@@ -17,13 +17,16 @@
       <div v-if="userLoggedIn">
         Moje konto
       </div>
-      <div class="login" @click="loginMethod">
+      <div class="login" @click="loginMethod" :class="loginSelected ? 'selected' : '' ">
         <p v-if="!userLoggedIn">
           Zaloguj
         </p>
         <p v-else>
           Wyloguj
         </p>
+      </div>
+      <div class="register" v-if="!userLoggedIn" @click="registerMethod" :class="registerSelected ? 'selected' : '' ">
+        Rejestracja
       </div>
     </div>
   </div>
@@ -45,15 +48,21 @@ export default {
     },
     myTeamSelected() {
       return this.$route.name === 'MyTeam'
+    },
+    loginSelected(){
+      return this.$route.name === 'Login'
+    },
+    registerSelected(){
+      return this.$route.name === 'Register'
     }
 
   },
   methods: {
     loginMethod() {
-      this.$store.commit('main/userLogin', !this.userLoggedIn)
-      if(!this.userLoggedIn){
-        this.$router.push('/')
-      }
+      this.$router.push('/login')
+    },
+    registerMethod() {
+      this.$router.push('/register')
     },
     openTeams() {
       this.$router.push('/teams')
@@ -109,7 +118,7 @@ export default {
         background-color: #727272;
       }
 
-      &.login {
+      &.login, &.register {
         color: #acefb9;
         font-weight: bold;
         cursor: pointer;

@@ -21,7 +21,11 @@ namespace Backend.Middleware
         {
             var url = httpContext.Request.Path.ToString();
             var loginToken = httpContext.Request.Headers["Authorization"].ToString();
-            if (!_context.Users.Any(u => "Bearer "+u.Token == loginToken) && !url.Equals("/api/Account/login"))
+            if((url.Equals("/api/Account/login") || url.Equals("/api/Account/register")))
+            {
+                await _next.Invoke(httpContext);
+            }
+            else if (!_context.Users.Any(u => "Bearer "+u.Token == loginToken))
             {
                 httpContext.Response.StatusCode = 403;
             }

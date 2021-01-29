@@ -7,7 +7,7 @@
       <div class="label">
         Nazwa:
       </div>
-      <textarea ref="nameText"/>
+      <input ref="nameText"/>
     </div>
     <div class="task-description wrapper">
       <div class="label">
@@ -25,7 +25,7 @@
       <div class="label">
         Deadline:
       </div>
-      <textarea ref="deadlineText" :value="getNormalDate(date)" disabled/>
+      <input ref="deadlineText" :value="getNormalDate(date)" disabled/>
       <div class="date-picker-wrapper">
         <img
             src="https://www.nicepng.com/png/full/376-3766098_appointment-calendar-coming-soon-daily-date-datepicker-date.png"
@@ -154,9 +154,13 @@ export default {
       background-color: var(--bg-color);
       resize: none;
       padding: 15px;
-      border: solid 1px var(--border-color-2);
       border-radius: 5px;
       overflow: hidden;
+      &:focus{
+        outline: none !important;
+        border:1px solid var(--acefb9);
+        box-shadow: 0 0 5px var(--acefb9);
+      }
     }
 
     .date-picker-wrapper {

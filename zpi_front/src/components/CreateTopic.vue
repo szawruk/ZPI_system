@@ -7,7 +7,7 @@
       <div class="label">
         Temat:
       </div>
-      <textarea ref="topicText"/>
+      <input ref="topicText"/>
 
     </div>
     <div class="topic-description wrapper">
@@ -80,6 +80,11 @@ export default {
       background-color: var(--bg-color);
       resize: none;
       padding: 10px;
+      &:focus{
+        outline: none !important;
+        border:1px solid var(--acefb9);
+        box-shadow: 0 0 5px var(--acefb9);
+      }
     }
 
     &.topic-name {

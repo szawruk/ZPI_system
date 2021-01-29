@@ -1,6 +1,6 @@
 import axios from "axios";
 import {axiosBaseUrl} from "@/config/config";
-axios.defaults.baseURL = axiosBaseUrl
+
 import router from "@/router";
 
 export default {

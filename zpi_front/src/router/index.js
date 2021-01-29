@@ -6,6 +6,8 @@ import CreateTopic from "@/components/CreateTopic";
 import CreateTeam from "@/components/CreateTeam";
 import MyTeam from "@/components/MyTeam";
 import CreateTask from "@/components/CreateTask";
+import Login from "@/components/Login";
+import Register from "@/components/Register";
 import Vue from 'vue'
 
 Vue.use(VueRouter)
@@ -15,6 +17,16 @@ const routes = [
         path: "/",
         name: "Home",
         component: MainPage,
+    },
+    {
+        path: "/login",
+        name: "Login",
+        component: Login,
+    },
+    {
+        path: "/register",
+        name: "Register",
+        component: Register,
     },
     {
         path: "/topics/new",
