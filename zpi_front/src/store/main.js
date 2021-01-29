@@ -1,6 +1,10 @@
 import axios from "axios";
 import router from "@/router";
 
+const config = {
+    headers: { Authorization: `Bearer ${token}` }
+};
+
 
 export default {
     namespaced: true,
@@ -18,10 +22,12 @@ export default {
     },
     actions: {
         userLogin({commit}, data) {
-            axios.post('/api/Account/login', {Email: data.emailText, Password: data.passwordText})
+            axios.post('/api/Account/login',
+                {Email: data.emailText, Password: data.passwordText}, {
+                headers: { Authorization: `Bearer ${JSON.parse(sessionStorage.getItem('tokennn'))}` }
+            })
                 .then(response => {
                     console.log(response)
-                    //TODO save token to localstorage or cookie
                     router.push('/').then()
                 })
         },
