@@ -14,7 +14,7 @@
       <div class="label">
         Nazwisko:
       </div>
-      <input ref="SurnameText"/>
+      <input ref="surnameText"/>
     </div>
     <div class="wrapper">
       <div class="label">
@@ -38,7 +38,7 @@
       <div class="label">
         Index:
       </div>
-      <input ref="emailText"/>
+      <input ref="indexText"/>
     </div>
     <div class="submit-button" @click="register()">
       Zarejestruj
@@ -70,15 +70,27 @@ export default {
         {
           id: 2,
           name: 'Pracownik uczelni',
-          description: "work",
+          type: "work",
         }]
     }
   },
   methods: {
     register() {
-      let emailTextBox = this.$refs.loginText
+      let nameTextBox = this.$refs.nameText
+      let surnameTextBox = this.$refs.surnameText
+      let emailTextBox = this.$refs.emailText
       let passwordTextBox = this.$refs.passwordText
-      this.$store.dispatch('main/userLogin', {emailText: emailTextBox.value, passwordText: passwordTextBox.value})
+      let accountType = this.selected.type
+      let indexTextBox = this.$refs.indexText
+      this.$store.dispatch('main/userRegister',
+          {
+            nameText: nameTextBox.value,
+            surnameText: surnameTextBox.value,
+            emailText: emailTextBox.value,
+            passwordText: passwordTextBox.value,
+            accountText: accountType,
+            indexText: indexTextBox.value,
+          })
     }
   }
 }

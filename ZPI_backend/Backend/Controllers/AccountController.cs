@@ -78,7 +78,7 @@ namespace Backend.Controllers
             }
         }
 
-        [HttpPost("Register")]
+        [HttpPost("register")]
         public async Task<ActionResult<User>> Register(User user)
         {
             if (!ModelState.IsValid)
