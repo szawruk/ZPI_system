@@ -102,7 +102,7 @@ namespace Backend.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return CreatedAtAction("Register", new { id = user.Id }, user);
         }
 
         [HttpGet("logout")]
