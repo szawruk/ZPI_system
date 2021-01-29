@@ -23,20 +23,14 @@ namespace Backend.Controllers
             _context = context;
         }
 
-        // GET: api/ProjectTasks/Team/2
-        [HttpGet("Team/{teamId}")]
-        public async Task<ActionResult<IEnumerable<ProjectTask>>> GetTasks(int teamId)
+        // GET: api/ProjectTasks/myTeam
+        [HttpGet("myTeam")]
+        public async Task<ActionResult<IEnumerable<ProjectTask>>> GetTasks()
         {
             var authHeader = Request.Headers["Authorization"].ToString();
             var user = await _context.Users.FirstOrDefaultAsync(u => "Bearer " + u.Token == authHeader);
 
-            if (user == null)
-            {
-                ModelState.AddModelError("", "Nie masz dostępu do tego zespołu");
-                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
-            }
-
-            var tasks = _context.Tasks.Where(t => t.TeamId == teamId);
+            var tasks = _context.Tasks.Where(t => t.TeamId == user.TeamId);
 
             if (tasks == null)
             {
@@ -59,7 +53,6 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<ActionResult<ProjectTask>> PostProjectTask(TaskTeam taskTeam)
         {
-            taskTeam.ProjectTask.Finished = false;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
