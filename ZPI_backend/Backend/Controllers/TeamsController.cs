@@ -31,14 +31,17 @@ namespace Backend.Controllers
             return await _context.Teams.Include(t => t.Topic).Include(t => t.Promoter).ToListAsync();
         }
 
-        // GET: api/Teams/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Team>> GetTeam(int id)
+        // GET: api/Teams/myTeam/users
+        [HttpGet("myTeam/users")]
+        public async Task<ActionResult<Team>> GetTeam()
         {
+            var authHeader = Request.Headers["Authorization"].ToString();
+            var user = await _context.Users.FirstOrDefaultAsync(u => "Bearer " + u.Token == authHeader);
+
             var team = await _context.Teams
                 .Include(t => t.Promoter)
                 .Include(t => t.Students)
-                .FirstOrDefaultAsync(t => t.Id == id);
+                .FirstOrDefaultAsync(t => t.Id == user.TeamId);
 
             foreach(var stud in team.Students)
             {
