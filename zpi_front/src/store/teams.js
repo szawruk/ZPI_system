@@ -13,7 +13,11 @@ export default {
     },
     actions: {
         getTeamsList({commit, state}) {
-            axios.get('/api/teams')
+            axios.get('/api/teams',{
+                headers:{
+                    authorization: 'Bearer ' + localStorage.getItem('tokennn')
+                }
+            })
                 .then(response => {
                     if (response.status === 200) {
                         console.log(response.data)
@@ -29,6 +33,10 @@ export default {
                 },
                 StudentId: 1,
                 TopicId: data.topicId
+            },{
+                headers:{
+                    authorization: 'Bearer ' + localStorage.getItem('tokennn')
+                }
             })
                 .then(response => {
                     console.log(response)

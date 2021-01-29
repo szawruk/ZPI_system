@@ -17,11 +17,11 @@
       <div v-if="userLoggedIn">
         Moje konto
       </div>
-      <div class="login" @click="loginMethod" :class="loginSelected ? 'selected' : '' ">
-        <p v-if="!userLoggedIn">
+      <div class="login"  :class="loginSelected ? 'selected' : '' ">
+        <p v-if="!userLoggedIn" @click="loginMethod">
           Zaloguj
         </p>
-        <p v-else>
+        <p v-else @click="logoutMethod">
           Wyloguj
         </p>
       </div>
@@ -61,6 +61,9 @@ export default {
     loginMethod() {
       this.$router.push('/login')
     },
+    logoutMethod() {
+      this.$store.dispatch('main/userLogout')
+    },
     registerMethod() {
       this.$router.push('/register')
     },
@@ -72,6 +75,13 @@ export default {
     },
     openMyTeam() {
       this.$router.push('/my-team')
+    }
+  },
+  mounted() {
+    if(localStorage.getItem('tokennn')){
+      this.$store.commit('main/userLogin', true)
+    }else{
+      this.$store.commit('main/userLogin', false)
     }
   }
 }

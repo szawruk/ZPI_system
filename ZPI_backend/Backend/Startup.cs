@@ -89,7 +89,8 @@ namespace Backend
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+            app.UseCors(MyAllowSpecificOrigins);
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -103,7 +104,7 @@ namespace Backend
 
 
 
-            app.UseCors(MyAllowSpecificOrigins);
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireAuthorization();
