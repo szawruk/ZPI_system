@@ -51,7 +51,7 @@ namespace Backend.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<ProjectTask>> PostProjectTask(TaskTeam taskTeam)
+        public async Task<ActionResult<ProjectTask>> PostProjectTask(ProjectTask task)
         {
             if (!ModelState.IsValid)
             {
@@ -61,19 +61,19 @@ namespace Backend.Controllers
             var authHeader = Request.Headers["Authorization"].ToString();
             var user = await _context.Users.FirstOrDefaultAsync(u => "Bearer " + u.Token == authHeader);
 
-            if (user.TeamId != taskTeam.TeamId)
+            if (user.TeamId ==null)
             {
-                ModelState.AddModelError("", "Brak dostępu");
+                ModelState.AddModelError("", "Nie posiadasz zespołu, aby dodać zadanie");
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
 
-            taskTeam.ProjectTask.Student = user;
-            taskTeam.ProjectTask.TeamId = user.TeamId;
+            task.Student = user;
+            task.TeamId = user.TeamId;
 
-            _context.Tasks.Add(taskTeam.ProjectTask);
+            _context.Tasks.Add(task);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProjectTask", new { id = taskTeam.ProjectTask.Id }, taskTeam.ProjectTask);
+            return CreatedAtAction("PostProjectTask", new { id = task.Id }, task);
         }
 
 
