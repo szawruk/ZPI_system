@@ -27,9 +27,10 @@ namespace Backend.Controllers
         [HttpGet("Team/{teamId}")]
         public async Task<ActionResult<IEnumerable<ProjectTask>>> GetTasks(int teamId)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(t => t.TeamId == teamId);
+            var authHeader = Request.Headers["Authorization"].ToString();
+            var user = await _context.Users.FirstOrDefaultAsync(u => "Bearer " + u.Token == authHeader);
 
-            if(user == null)
+            if (user == null)
             {
                 ModelState.AddModelError("", "Nie masz dostępu do tego zespołu");
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
@@ -43,7 +44,7 @@ namespace Backend.Controllers
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
 
-            foreach(var task in tasks)
+            foreach (var task in tasks)
             {
                 task.Student.Tasks = null;
             }
@@ -51,102 +52,37 @@ namespace Backend.Controllers
             return tasks.ToList();
         }
 
-        // GET: api/ProjectTasks/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ProjectTask>> GetProjectTask(int id)
-        {
-            var projectTask = await _context.Tasks.Include(pt => pt.Student).Include(pt => pt.Team).FirstOrDefaultAsync(pt => pt.Id == id);
-            projectTask.Team.Students = null;
-            projectTask.Student.Team = null;
-
-            if (projectTask == null)
-            {
-                return NotFound();
-            }
-
-            return projectTask;
-        }
-
-        // PUT: api/ProjectTasks/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProjectTask(int id, ProjectTask projectTask)
-        {
-            if (id != projectTask.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(projectTask).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProjectTaskExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
 
         // POST: api/ProjectTasks
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<ProjectTask>> PostProjectTask(TaskTeamStudent taskTeamStudent)
+        public async Task<ActionResult<ProjectTask>> PostProjectTask(TaskTeam taskTeam)
         {
-            taskTeamStudent.projectTask.Finished = false;
+            taskTeam.ProjectTask.Finished = false;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
 
-            var user = await  _context.Users.FirstOrDefaultAsync(
-                x => x.Id == taskTeamStudent.StudentId && x.TeamId == taskTeamStudent.TeamId);
+            var authHeader = Request.Headers["Authorization"].ToString();
+            var user = await _context.Users.FirstOrDefaultAsync(u => "Bearer " + u.Token == authHeader);
 
-            if(user == null)
+            if (user.TeamId != taskTeam.TeamId)
             {
-                ModelState.AddModelError("", "Wygasła sesja, zaloguj się ponownie");
+                ModelState.AddModelError("", "Brak dostępu");
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
-            taskTeamStudent.projectTask.Student = user;
-            taskTeamStudent.projectTask.TeamId = user.TeamId;
 
-            _context.Tasks.Add(taskTeamStudent.projectTask);
+            taskTeam.ProjectTask.Student = user;
+            taskTeam.ProjectTask.TeamId = user.TeamId;
+
+            _context.Tasks.Add(taskTeam.ProjectTask);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProjectTask", new { id = taskTeamStudent.projectTask.Id }, taskTeamStudent.projectTask);
+            return CreatedAtAction("GetProjectTask", new { id = taskTeam.ProjectTask.Id }, taskTeam.ProjectTask);
         }
 
-        // DELETE: api/ProjectTasks/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ProjectTask>> DeleteProjectTask(int id)
-        {
-            var projectTask = await _context.Tasks.FindAsync(id);
-            if (projectTask == null)
-            {
-                return NotFound();
-            }
 
-            _context.Tasks.Remove(projectTask);
-            await _context.SaveChangesAsync();
-
-            return projectTask;
-        }
-
-        private bool ProjectTaskExists(int id)
-        {
-            return _context.Tasks.Any(e => e.Id == id);
-        }
     }
 }
