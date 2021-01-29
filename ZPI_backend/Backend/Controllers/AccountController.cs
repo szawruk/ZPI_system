@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Backend.Acefb9Utils;
 using Backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -62,6 +63,8 @@ namespace Backend.Controllers
 
                     user.Token = finalToken;
 
+                    await _context.SaveChangesAsync();
+
                     return Ok(finalToken);
                 }
                 else
@@ -75,12 +78,43 @@ namespace Backend.Controllers
             }
         }
 
+        [HttpPost("Register")]
+        public async Task<ActionResult<User>> Register(User user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+
+            if (user.AccountType != AccountType.stud.ToString() &&
+                user.AccountType != AccountType.work.ToString())
+            {
+                ModelState.AddModelError("", "Błąd przy wyborze rodzaju konta");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+
+            if (_context.Users.Any(x => x.Email == user.Email))
+            {
+                ModelState.AddModelError("", "Powtarzający się email");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+        }
+
         [HttpGet("logout")]
         [Authorize]
         public async Task Logout()
         {
-            var authHeader = Request.Headers["Authorization"];
-            var x = 2;
+            var authHeader = Request.Headers["Authorization"].ToString();
+            var user = await _context.Users.FirstOrDefaultAsync(u => "Bearer "+u.Token == authHeader);
+
+            user.Token = null;
+
+            await _context.SaveChangesAsync();
         }
 
         private async Task<User> GetUser(string email, string password)
