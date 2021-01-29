@@ -7,10 +7,9 @@ using ZPI_Database.Models;
 
 namespace Backend.Models
 {
-    public class TeamStudentTopic
+    public class TeamTopic
     {
         public Team Team { get; set; }
-        public int StudentId { get; set; }
         public int? TopicId { get; set; }
     }
 }
