@@ -46,7 +46,7 @@ namespace Backend.Controllers
         public async Task<ActionResult<Topic>> GetTopicTeams(int id)
         {
             var topic = await _context.Topics.FindAsync(id);
-            topic.Teams = _context.Teams.Where(x => x.TopicId == id).ToList();
+            topic.Teams = _context.Teams.Include(t => t.Promoter).Where(x => x.TopicId == id).ToList();
             if (topic == null)
             {
                 return NotFound();
@@ -60,49 +60,19 @@ namespace Backend.Controllers
         public async Task<ActionResult<Topic>> GetTopicTeamsUsers(int id)
         {
             var topic = await _context.Topics.FindAsync(id);
-            topic.Teams = _context.Teams.Where(x => x.TopicId == id).ToList();
-            foreach(var team in topic.Teams)
-            {
-                team.Students = _context.Users.Where(x => x.TeamId == team.Id).ToList();
-            }
+
             if (topic == null)
             {
                 return NotFound();
             }
 
+            topic.Teams = _context.Teams.Include(t => t.Promoter).Where(x => x.TopicId == id).ToList();
+            foreach(var team in topic.Teams)
+            {
+                team.Students = _context.Users.Where(x => x.TeamId == team.Id).ToList();
+            }  
+
             return topic;
-        }
-
-        // PUT: api/Topics/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTopic(int id, Topic topic)
-        {
-            if (id != topic.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(topic).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TopicExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
         // POST: api/Topics
@@ -117,25 +87,5 @@ namespace Backend.Controllers
             return CreatedAtAction("GetTopic", new { id = topic.Id }, topic);
         }
 
-        // DELETE: api/Topics/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Topic>> DeleteTopic(int id)
-        {
-            var topic = await _context.Topics.FindAsync(id);
-            if (topic == null)
-            {
-                return NotFound();
-            }
-
-            _context.Topics.Remove(topic);
-            await _context.SaveChangesAsync();
-
-            return topic;
-        }
-
-        private bool TopicExists(int id)
-        {
-            return _context.Topics.Any(e => e.Id == id);
-        }
     }
 }
