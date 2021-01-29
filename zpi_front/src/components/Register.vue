@@ -1,29 +1,47 @@
 <template>
-  <div class="create-team">
+  <div class="register">
     <div class="header">
-      Podaj dane zespołu
+      Rejestracja
     </div>
-    <div class="team-name wrapper">
+
+    <div class="wrapper">
       <div class="label">
-        Nazwa:
+        Imię:
       </div>
       <input ref="nameText"/>
     </div>
-    <div class="team-description wrapper">
+    <div class="wrapper">
       <div class="label">
-        Opis:
+        Nazwisko:
       </div>
-      <textarea ref="descriptionText"/>
+      <input ref="SurnameText"/>
     </div>
-    <div class="team-choose wrapper">
+    <div class="wrapper">
       <div class="label">
-        Temat:
+        Email:
       </div>
-      <v-select v-model="selected" :options="topicsList" label="name"  class="style-chooser"/>
+      <input ref="emailText"/>
     </div>
-
-    <div class="submit-button" @click="saveTeam()">
-      Zapisz
+    <div class="wrapper">
+      <div class="label">
+        Hasło:
+      </div>
+      <input type="password" ref="passwordText" class="password"/>
+    </div>
+    <div class="account-type wrapper">
+      <div class="label">
+        Typ konta:
+      </div>
+      <v-select v-model="selected" :options="accountTypeList" label="name" class="style-chooser"/>
+    </div>
+    <div class="wrapper">
+      <div class="label">
+        Index:
+      </div>
+      <input ref="emailText"/>
+    </div>
+    <div class="submit-button" @click="register()">
+      Zarejestruj
     </div>
   </div>
 </template>
@@ -32,7 +50,7 @@
 import vSelect from 'vue-select';
 
 export default {
-  name: "CreateTeam",
+  name: "Register",
   data() {
     return {
       selected: null
@@ -42,33 +60,38 @@ export default {
     vSelect
   },
   computed: {
-    topicsList() {
-      return this.$store.state.topics.topicsList
+    accountTypeList() {
+      return [
+        {
+          id: 1,
+          name: 'Student',
+          type: "stud",
+        },
+        {
+          id: 2,
+          name: 'Pracownik uczelni',
+          description: "work",
+        }]
     }
   },
   methods: {
-    saveTeam() {
-      let topicId = this.selected ? this.selected.id : null;
-      let nameTextBox = this.$refs.nameText
-      let descriptionTextBox = this.$refs.descriptionText
-      this.$store.dispatch('teams/saveTeam', {teamText: nameTextBox.value, descriptionText: descriptionTextBox.value, topicId: topicId})
+    register() {
+      let emailTextBox = this.$refs.loginText
+      let passwordTextBox = this.$refs.passwordText
+      this.$store.dispatch('main/userLogin', {emailText: emailTextBox.value, passwordText: passwordTextBox.value})
     }
-  },
-  mounted() {
-    this.$store.dispatch('topics/getTopicsList')
   }
 }
 </script>
 
 <style scoped lang="scss">
-.create-team {
+.register {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 30px;
   background-color: rgba(255, 255, 255, 0.1);
-
 
   .header {
     width: 100%;
@@ -88,6 +111,7 @@ export default {
     width: 600px;
     display: flex;
     margin: 30px 0;
+    height: 50px;
 
     .label {
       flex: 1;
@@ -95,7 +119,6 @@ export default {
       justify-content: center;
       align-items: center;
       height: 50px;
-      min-width: 120px;
       margin-right: 20px;
     }
 
@@ -106,10 +129,11 @@ export default {
       background-color: var(--bg-color);
       resize: none;
       padding: 10px;
-      border: none;
-      &:focus{
+      border: solid 1px var(--border-color-1);
+
+      &:focus {
         outline: none !important;
-        border:1px solid var(--acefb9);
+        border: 1px solid var(--acefb9);
         box-shadow: 0 0 5px var(--acefb9);
       }
     }
@@ -118,15 +142,6 @@ export default {
       flex: 4;
     }
 
-
-
-    &.team-name, .team-choose {
-      height: 50px;
-    }
-
-    &.team-description {
-      height: 150px;
-    }
   }
 
   .submit-button {

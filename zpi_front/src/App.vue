@@ -110,10 +110,53 @@ b, strong, .bold {
 .style-chooser .vs__dropdown-toggle,
 .style-chooser .vs__dropdown-menu {
   background-color: var(--bg-color);
-  border: solid 1px var(--border-color-2);
+}
+.style-chooser{
+  .vs__dropdown-menu{
+    outline: none !important;
+    border: 2px solid var(--acefb9);
+    border-top: none;
+    box-shadow: 0 0 15px var(--acefb9);
+  }
+}
+.style-chooser{
+  .vs__dropdown-option{
+    background-color: transparent;
+    &:hover{
+      background-color: var(--acefb9);
+      color: black;
+    }
+  }
+}
+
+.style-chooser{
+  &.vs--open{
+    outline: none !important;
+    border: 1px solid var(--acefb9);
+    box-shadow: 0 0 5px var(--acefb9);
+  }
 }
 
 input {
-  color: white !important;
+  color: white;
+  flex: 4;
+  word-wrap: break-word;
+  word-break: break-all;
+  background-color: var(--bg-color);
+  resize: none;
+  padding: 10px;
+  outline: none;
+  border: none;
+  font-size: 16px;
+
+  &:focus {
+    outline: none !important;
+    border: 1px solid var(--acefb9);
+    box-shadow: 0 0 5px var(--acefb9);
+  }
+}
+
+textarea{
+  border: none;
 }
 </style>
