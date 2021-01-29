@@ -51,7 +51,7 @@ namespace Backend.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<ProjectTask>> PostProjectTask(ProjectTask task)
+        public async Task<ActionResult<ProjectTask>> PostProjectTask(TaskUser task)
         {
             if (!ModelState.IsValid)
             {
@@ -61,19 +61,26 @@ namespace Backend.Controllers
             var authHeader = Request.Headers["Authorization"].ToString();
             var user = await _context.Users.FirstOrDefaultAsync(u => "Bearer " + u.Token == authHeader);
 
+            var userToAssign = await _context.Users.FirstOrDefaultAsync(u => u.Id == task.StudentId && u.TeamId == user.TeamId);
+
             if (user.TeamId ==null)
             {
                 ModelState.AddModelError("", "Nie posiadasz zespołu, aby dodać zadanie");
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
+            if (userToAssign == null)
+            {
+                ModelState.AddModelError("", "Taki użytkownik nie istniejew twoim zespole");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
 
-            task.Student = user;
-            task.TeamId = user.TeamId;
+            task.ProjectTask.Student = userToAssign;
+            task.ProjectTask.TeamId = user.TeamId;
 
-            _context.Tasks.Add(task);
+            _context.Tasks.Add(task.ProjectTask);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostProjectTask", new { id = task.Id }, task);
+            return CreatedAtAction("PostProjectTask", new { id = task.ProjectTask.Id }, task.ProjectTask);
         }
 
 
