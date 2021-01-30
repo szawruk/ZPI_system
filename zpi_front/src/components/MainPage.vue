@@ -4,24 +4,10 @@
            <p>
              Witamy na stronie ZPI!
            </p>
-           <p>
-             Witamy na stronie ZPI!
-           </p>
-           <p>
-             Witamy na stronie ZPI!
-           </p>
-           <p>
-             Witamy na stronie ZPI!
-           </p>
-           <p>
-             Witamy na stronie ZPI!
-           </p>
-           <p>
-             Witamy na stronie ZPI!
-           </p>
-           <p>
-             Witamy na stronie ZPI!
-           </p>
+          <p>
+            Szymon Awruk,  Adam Sierakowski
+          </p>
+
 
         </div>
     </div>
@@ -42,7 +28,7 @@
     
     }
     .container {
-        color: red;
+      color: #999999;
       font-weight: bold;
       font-size: 25px;
     }
