@@ -65,7 +65,8 @@ namespace Backend.Controllers
 
             if (user.Team == null)
             {
-                return NotFound();
+                ModelState.AddModelError("", "Twój rodzaj konta nie może wykonać tej operacji");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
 
             return user.Team;

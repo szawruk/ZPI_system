@@ -70,7 +70,7 @@ namespace Backend.Controllers
             }
             if (userToAssign == null)
             {
-                ModelState.AddModelError("", "Taki użytkownik nie istniejew twoim zespole");
+                ModelState.AddModelError("", "Taki użytkownik nie istnieje w twoim zespole");
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
 

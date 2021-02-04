@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZPI_Database.DataAccess;
 
 namespace ZPI_Database.Migrations
 {
     [DbContext(typeof(ZPIContext))]
-    partial class ZPIContextModelSnapshot : ModelSnapshot
+    [Migration("20210203220140_TopicUniqueName")]
+    partial class TopicUniqueName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,9 +118,6 @@ namespace ZPI_Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("PromoterId");
 
                     b.HasIndex("TopicId");
@@ -200,10 +199,6 @@ namespace ZPI_Database.Migrations
                         .IsUnique();
 
                     b.HasIndex("TeamId");
-
-                    b.HasIndex("Token")
-                        .IsUnique()
-                        .HasFilter("[Token] IS NOT NULL");
 
                     b.ToTable("Users");
                 });

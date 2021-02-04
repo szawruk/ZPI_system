@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{FD22CDA1-90F6-431E-8297-DDEF1408D7DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend", "Backend\Backend.csproj", "{FD22CDA1-90F6-431E-8297-DDEF1408D7DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZPI_Database", "ZPI_Database\ZPI_Database.csproj", "{DE5D94F1-1BAF-457D-9E4C-4C66FF5BA039}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZPI_Database", "ZPI_Database\ZPI_Database.csproj", "{DE5D94F1-1BAF-457D-9E4C-4C66FF5BA039}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendTests", "BackendTests\BackendTests.csproj", "{F65B8D0B-53CB-49EF-BD76-B6F277534625}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DE5D94F1-1BAF-457D-9E4C-4C66FF5BA039}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE5D94F1-1BAF-457D-9E4C-4C66FF5BA039}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE5D94F1-1BAF-457D-9E4C-4C66FF5BA039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F65B8D0B-53CB-49EF-BD76-B6F277534625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F65B8D0B-53CB-49EF-BD76-B6F277534625}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F65B8D0B-53CB-49EF-BD76-B6F277534625}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F65B8D0B-53CB-49EF-BD76-B6F277534625}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

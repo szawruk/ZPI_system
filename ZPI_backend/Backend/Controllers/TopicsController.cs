@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Backend.Acefb9Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ZPI_Database.DataAccess;
@@ -67,10 +68,10 @@ namespace Backend.Controllers
             }
 
             topic.Teams = _context.Teams.Include(t => t.Promoter).Where(x => x.TopicId == id).ToList();
-            foreach(var team in topic.Teams)
+            foreach (var team in topic.Teams)
             {
                 team.Students = _context.Users.Where(x => x.TeamId == team.Id).ToList();
-            }  
+            }
 
             return topic;
         }
@@ -81,6 +82,16 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Topic>> PostTopic(Topic topic)
         {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Niepoprawny model tematu");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+            if(_context.Topics.Any(t => t.Name== topic.Name))
+            {
+                ModelState.AddModelError("", "Niepoprawna nazwa modelu");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
             _context.Topics.Add(topic);
             await _context.SaveChangesAsync();
 
