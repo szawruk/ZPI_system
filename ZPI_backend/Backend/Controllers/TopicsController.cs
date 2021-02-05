@@ -82,7 +82,7 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Topic>> PostTopic(Topic topic)
         {
-            if (!ModelState.IsValid)
+            if (topic == null || !ModelState.IsValid || string.IsNullOrWhiteSpace(topic.Name))
             {
                 ModelState.AddModelError("", "Niepoprawny model tematu");
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));

@@ -14,10 +14,11 @@ using ZPI_Database.Models;
 
 namespace BackendTests
 {
+    [Collection("ControllerTests")]
     public class ProjectTasksControllerTest
     {
         // Needed in all tests
-        private readonly DbContextOptions<ZPIContext> options = new DbContextOptionsBuilder<ZPIContext>().UseInMemoryDatabase(databaseName: "ZPIContext2").Options;
+        private readonly DbContextOptions<ZPIContext> options = new DbContextOptionsBuilder<ZPIContext>().UseInMemoryDatabase(databaseName: "ZPIContext").Options;
         private readonly ZPIContext testContext;
         private readonly ProjectTasksController taskController;
 
@@ -28,10 +29,6 @@ namespace BackendTests
             taskController = new ProjectTasksController(testContext);
             taskController.ControllerContext.HttpContext = new DefaultHttpContext();
             InitUsers();
-        }
-        ~ProjectTasksControllerTest()
-        {
-            testContext.Database.EnsureDeleted();
         }
 
         private void InitUsers()
@@ -83,9 +80,9 @@ namespace BackendTests
         }
 
         [Fact]
-        public void AddTaskToYourself()
+        public void AddTaskToYourselfTest()
         {
-            // Token of User1 who doesn't have a team
+            // Token of User2 who has a team
             taskController.HttpContext.Request.Headers["Authorization"] = "Bearer token2";
             var taskUser = new TaskUser()
             {
@@ -94,7 +91,6 @@ namespace BackendTests
                     Name = "Task",
                     Description = "Opis testowy",
                     Deadline = DateTime.Now,
-
                 },
                 StudentId = 2
             };
@@ -104,9 +100,9 @@ namespace BackendTests
         }
 
         [Fact]
-        public void AddTaskToTeammate()
+        public void AddTaskToTeammateTest()
         {
-            // Token of User1 who doesn't have a team
+            // Token of User2 who has team
             taskController.HttpContext.Request.Headers["Authorization"] = "Bearer token2";
             var taskUser = new TaskUser()
             {
@@ -125,9 +121,9 @@ namespace BackendTests
         }
 
         [Fact]
-        public void AddTaskUserNotInTeam()
+        public void AddTaskUserNotInTeamTest()
         {
-            // Token of User1 who doesn't have a team
+            // Token of User2 who has a team
             taskController.HttpContext.Request.Headers["Authorization"] = "Bearer token2";
             var taskUser = new TaskUser()
             {
@@ -135,8 +131,7 @@ namespace BackendTests
                 {
                     Name = "Task",
                     Description = "Opis testowy",
-                    Deadline = DateTime.Now,
-
+                    Deadline = DateTime.Now
                 },
                 StudentId = 1
             };
@@ -146,7 +141,7 @@ namespace BackendTests
         }
 
         [Fact]
-        public void AddTaskWithoutTeam()
+        public void AddTaskWithoutTeamTest()
         {
             // Token of User1 who doesn't have a team
             taskController.HttpContext.Request.Headers["Authorization"] = "Bearer token1";
@@ -167,9 +162,99 @@ namespace BackendTests
         }
 
         [Fact]
+        public void AddTaskNullTest()
+        {
+            // Token of User2 who has a team
+            taskController.HttpContext.Request.Headers["Authorization"] = "Bearer token2";
+            TaskUser taskUser = null;
+
+            var res = ((ObjectResult)(taskController.PostProjectTask(taskUser).Result.Result)).StatusCode;
+
+            Assert.Equal(400, res);
+        }
+
+        [Fact]
+        public void AddTaskTaskNullTest()
+        {
+            // Token of User2 who has a team
+            taskController.HttpContext.Request.Headers["Authorization"] = "Bearer token2";
+            var taskUser = new TaskUser()
+            {
+                ProjectTask = null,
+                StudentId = 1
+            };
+
+            var res = ((ObjectResult)(taskController.PostProjectTask(taskUser).Result.Result)).StatusCode;
+
+            Assert.Equal(400, res);
+        }
+
+        [Fact]
+        public void AddTaskUserNullTest()
+        {
+            // Token of User2 who has a team
+            taskController.HttpContext.Request.Headers["Authorization"] = "Bearer token2";
+            var taskUser = new TaskUser()
+            {
+                ProjectTask = new ProjectTask()
+                {
+                    Name = "Task 1",
+                    Description = "Opis testowy1",
+                    Deadline = DateTime.Now,
+                }
+            };
+
+            var res = ((ObjectResult)(taskController.PostProjectTask(taskUser).Result.Result)).StatusCode;
+
+            Assert.Equal(400, res);
+        }
+
+        [Fact]
+        public void AddTaskNameEmptyTest()
+        {
+            // Token of User2 who has a team
+            taskController.HttpContext.Request.Headers["Authorization"] = "Bearer token2";
+            var taskUser = new TaskUser()
+            {
+                ProjectTask = new ProjectTask()
+                {
+                    Name = "",
+                    Description = "Opis testowy1",
+                    Deadline = DateTime.Now,
+                },
+                StudentId=2
+            };
+
+            var res = ((ObjectResult)(taskController.PostProjectTask(taskUser).Result.Result)).StatusCode;
+
+            Assert.Equal(400, res);
+        }
+
+        [Fact]
+        public void AddTaskNameNullTest()
+        {
+            // Token of User2 who has a team
+            taskController.HttpContext.Request.Headers["Authorization"] = "Bearer token2";
+            var taskUser = new TaskUser()
+            {
+                ProjectTask = new ProjectTask()
+                {
+                    Name = null,
+                    Description = "Opis testowy1",
+                    Deadline = DateTime.Now,
+                },
+                StudentId = 2
+            };
+
+            var res = ((ObjectResult)(taskController.PostProjectTask(taskUser).Result.Result)).StatusCode;
+
+            Assert.Equal(400, res);
+        }
+
+        [Fact]
         public void GetTaskList()
         {
-            // Token of User1 who doesn't have a team
+            // Token of User2 who has a team
             taskController.HttpContext.Request.Headers["Authorization"] = "Bearer token2";
             var taskUser1 = new TaskUser()
             {
@@ -188,7 +273,6 @@ namespace BackendTests
                     Name = "Task 2",
                     Description = "Opis testowy2",
                     Deadline = DateTime.Now,
-
                 },
                 StudentId = 2
             };
@@ -199,16 +283,28 @@ namespace BackendTests
                     Name = "Task 3",
                     Description = "Opis testowy3",
                     Deadline = DateTime.Now,
-
                 },
                 StudentId = 3
             };
             _ = taskController.PostProjectTask(taskUser1).Result;
             _ = taskController.PostProjectTask(taskUser2).Result;
-            var xd = taskController.PostProjectTask(taskUser3).Result;
+            _ = taskController.PostProjectTask(taskUser3).Result;
             var res = (taskController.GetTasks().Result).Value;
 
             Assert.Equal(3, res.Count());
+        }
+
+        [Fact]
+        public void GetTaskListNoTeam()
+        {
+            // Token of User1 who don't have a team
+            taskController.HttpContext.Request.Headers["Authorization"] = "Bearer token1";
+
+            var res = ((ObjectResult)(taskController.GetTasks().Result.Result)).StatusCode;
+
+            var 
+
+            Assert.Equal(400, res);
         }
     }
 }
