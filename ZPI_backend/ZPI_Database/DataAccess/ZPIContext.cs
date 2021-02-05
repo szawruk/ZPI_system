@@ -65,6 +65,7 @@ namespace ZPI_Database.DataAccess
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Token)
                 .IsUnique();
+
         }
     }
 }

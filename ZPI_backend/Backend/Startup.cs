@@ -87,6 +87,7 @@ namespace Backend
                 options => options.WithOrigins("http://localhost", "http://localhost:8080")
                 .AllowAnyOrigin().AllowAnyMethod().AllowAnyMethod().AllowAnyHeader()
             );
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -99,7 +100,6 @@ namespace Backend
             app.UseAuthentication();
 
             app.UseAuthorization();
-
 
             app.UseMiddleware<ValidateAuthorization>();
 

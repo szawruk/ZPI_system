@@ -9,10 +9,11 @@ using ZPI_Database.Models;
 
 namespace BackendTests
 {
+    [Collection("ControllerTests")]
     public class TopicsControllerTest
     {
         // Needed in all tests
-        private readonly DbContextOptions<ZPIContext> options = new DbContextOptionsBuilder<ZPIContext>().UseInMemoryDatabase(databaseName: "ZPIContext1").Options;
+        private readonly DbContextOptions<ZPIContext> options = new DbContextOptionsBuilder<ZPIContext>().UseInMemoryDatabase(databaseName: "ZPIContext").Options;
         private readonly ZPIContext testContext;
         private readonly TopicsController topicContr;
 
@@ -24,17 +25,17 @@ namespace BackendTests
         }
 
         [Fact]
-        public void AddTest()
+        public void AddTopicTest()
         {
             var topic1 = new Topic()
             {
                 Name = "Nazwa testowa",
-                Description = "Opis testowy",
+                Description = "Opis testowy"
             };
             var topic2 = new Topic()
             {
                 Name = "Nazwa testowa2",
-                Description = "Opis testowy",
+                Description = "Opis testowy"
             };
 
             var res1 = ((ObjectResult)topicContr.PostTopic(topic1).Result.Result).StatusCode;
@@ -44,17 +45,52 @@ namespace BackendTests
         }
 
         [Fact]
-        public void AddDuplicateTestAsync()
+        public void AddTopicNullTest()
+        {
+            Topic topic = null;
+
+            var res = ((ObjectResult)topicContr.PostTopic(topic).Result.Result).StatusCode;
+
+            Assert.Equal(400,res);
+        }
+
+        [Fact]
+        public void AddTopicNameNullTest()
+        {
+            Topic topic = new Topic()
+            {
+                Description = "Opis testowy"
+            };
+            var res = ((ObjectResult)topicContr.PostTopic(topic).Result.Result).StatusCode;
+
+            Assert.Equal(400, res);
+        }
+
+        [Fact]
+        public void AddTopicNameEmptyTest()
+        {
+            Topic topic = new Topic()
+            {
+                Name="",
+                Description = "Opis testowy"
+            };
+            var res = ((ObjectResult)topicContr.PostTopic(topic).Result.Result).StatusCode;
+
+            Assert.Equal(400, res);
+        }
+
+        [Fact]
+        public void AddTopicDuplicatedTest()
         {
             var topic1 = new Topic()
             {
                 Name = "Nazwa testowa",
-                Description = "Opis testowy",
+                Description = "Opis testowy"
             };
             var topic2 = new Topic()
             {
                 Name = "Nazwa testowa",
-                Description = "Opis testowy",
+                Description = "Opis testowy"
             };
             _ = topicContr.PostTopic(topic1).Result;
             var res2 = ((ObjectResult)topicContr.PostTopic(topic2).Result.Result).StatusCode;

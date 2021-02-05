@@ -30,7 +30,13 @@ namespace Backend.Controllers
             var authHeader = Request.Headers["Authorization"].ToString();
             var user = await _context.Users.FirstOrDefaultAsync(u => "Bearer " + u.Token == authHeader);
 
-            var tasks = _context.Tasks.Where(t => t.TeamId == user.TeamId).Include(t => t.Student);
+            if (user.TeamId == null)
+            {
+                ModelState.AddModelError("", "Nie posiadasz zespołu");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+
+            var tasks = _context.Tasks.Where(t => t.TeamId == user.TeamId);
 
             if (tasks == null)
             {
@@ -53,8 +59,13 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<ActionResult<ProjectTask>> PostProjectTask(TaskUser task)
         {
-            if (!ModelState.IsValid)
+            if (task == null || task.ProjectTask == null || !ModelState.IsValid)
             {
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+            }
+            if (string.IsNullOrWhiteSpace(task.ProjectTask.Name))
+            {
+                ModelState.AddModelError("", "Zadanie musi posiadać nazwę");
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
 

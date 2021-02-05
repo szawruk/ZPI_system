@@ -2,6 +2,7 @@
 using Backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,10 @@ using ZPI_Database.Models;
 
 namespace BackendTests
 {
+    [Collection("ControllerTests")]
     public class TeamsControllerTest
     {
-        private readonly DbContextOptions<ZPIContext> options = new DbContextOptionsBuilder<ZPIContext>().UseInMemoryDatabase(databaseName: "ZPIContext3").Options;
+        private readonly DbContextOptions<ZPIContext> options = new DbContextOptionsBuilder<ZPIContext>().UseInMemoryDatabase(databaseName: "ZPIContext").Options;
         private readonly ZPIContext testContext;
         private readonly TeamsController teamController;
 
@@ -27,11 +29,6 @@ namespace BackendTests
             teamController = new TeamsController(testContext);
             teamController.ControllerContext.HttpContext = new DefaultHttpContext();
             InitUsers();
-        }
-
-        ~TeamsControllerTest()
-        {
-            testContext.Database.EnsureDeleted();
         }
 
         private void InitUsers()
@@ -70,12 +67,12 @@ namespace BackendTests
             testContext.Users.Add(user1);
             testContext.Users.Add(user2);
             testContext.Users.Add(user3);
+
             var team = new Team()
             {
                 Id=1,
                 Name = "New team 1"
             };
-
             testContext.Teams.Add(team);
             team.Students.Add(user2);
             team.Students.Add(user3);
@@ -85,7 +82,7 @@ namespace BackendTests
 
 
         [Fact]
-        public void CreatingTeam()
+        public void CreateTeamTest()
         {
             // Token of User1 who doesn't have a team
             teamController.HttpContext.Request.Headers["Authorization"] = "Bearer token1";
@@ -98,13 +95,79 @@ namespace BackendTests
                     Name = "New Team 2"
                 }
             };
-            var res = ((ObjectResult)(teamController.PostTeam(tT).Result.Result)).StatusCode; ;
+            var res = ((ObjectResult)(teamController.PostTeam(tT).Result.Result)).StatusCode;
 
             Assert.Equal(201, res);
         }
 
         [Fact]
-        public void CreatingTeamTopicExist()
+        public void CreateTeamCompleteNullTest()
+        {
+            // Token of User1 who doesn't have a team
+            teamController.HttpContext.Request.Headers["Authorization"] = "Bearer token1";
+
+            TeamTopic tT = null;
+            var res = ((ObjectResult)(teamController.PostTeam(tT).Result.Result)).StatusCode;
+
+            Assert.Equal(400, res);
+        }
+
+        [Fact]
+        public void CreateTeamNullTest()
+        {
+            // Token of User1 who doesn't have a team
+            teamController.HttpContext.Request.Headers["Authorization"] = "Bearer token1";
+
+            var tT = new TeamTopic()
+            {
+                Team = null
+            };
+            var res = ((ObjectResult)(teamController.PostTeam(tT).Result.Result)).StatusCode;
+
+            Assert.Equal(400, res);
+        }
+
+        [Fact]
+        public void CreatingTeamNameNullTest()
+        {
+            // Token of User1 who doesn't have a team
+            teamController.HttpContext.Request.Headers["Authorization"] = "Bearer token1";
+
+            var tT = new TeamTopic()
+            {
+                Team = new Team()
+                {
+                    Id = 2,
+                    Description = "Opis testowy"
+                }
+            };
+            var res = ((ObjectResult)(teamController.PostTeam(tT).Result.Result)).StatusCode;
+
+            Assert.Equal(400, res);
+        }
+
+        [Fact]
+        public void CreatingTeamNameEmptyTest()
+        {
+            // Token of User1 who doesn't have a team
+            teamController.HttpContext.Request.Headers["Authorization"] = "Bearer token1";
+
+            var tT = new TeamTopic()
+            {
+                Team = new Team()
+                {
+                    Id = 2,
+                    Name = "",
+                    Description = "Opis testowy"
+                }
+            };
+            var res = ((ObjectResult)(teamController.PostTeam(tT).Result.Result)).StatusCode;
+
+            Assert.Equal(400, res);
+        }
+
+        [Fact]
+        public void CreatingTeamTopicExistTest()
         {
             // Token of User1 who doesn't have a team
             teamController.HttpContext.Request.Headers["Authorization"] = "Bearer token1";
@@ -113,7 +176,7 @@ namespace BackendTests
             {
                 Id=1,
                 Name = "Nazwa testowa",
-                Description = "Opis testowy",
+                Description = "Opis testowy"
             };
 
             testContext.Topics.Add(topic);
@@ -125,7 +188,6 @@ namespace BackendTests
                     Name = "New Team 2"
                 },
                 TopicId=1
-                
             };
             var res = ((ObjectResult)(teamController.PostTeam(tT).Result.Result)).StatusCode;
 
@@ -133,7 +195,7 @@ namespace BackendTests
         }
 
         [Fact]
-        public void CreatingTeamTopicNoExist()
+        public void CreatingTeamTopicNoExistTest()
         {
             // Token of User1 who doesn't have a team
             teamController.HttpContext.Request.Headers["Authorization"] = "Bearer token1";
@@ -162,7 +224,7 @@ namespace BackendTests
         }
 
         [Fact]
-        public void CreatingTeamAgain()
+        public void CreatingTeamAgainTest()
         {
             // Token of User1 who has a team
             teamController.HttpContext.Request.Headers["Authorization"] = "Bearer token2";

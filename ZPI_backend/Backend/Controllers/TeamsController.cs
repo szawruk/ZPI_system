@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Backend.Acefb9Utils;
@@ -43,7 +44,7 @@ namespace Backend.Controllers
                 .Include(t => t.Students)
                 .FirstOrDefaultAsync(t => t.Id == user.TeamId);
 
-            foreach(var stud in team.Students)
+            foreach (var stud in team.Students)
             {
                 stud.Team = null;
             }
@@ -78,27 +79,29 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Team>> PostTeam(TeamTopic tT)
         {
-            if (!ModelState.IsValid)
+            if (tT == null || tT.Team == null || 
+                !ModelState.IsValid || string.IsNullOrWhiteSpace(tT.Team.Name))
             {
+                ModelState.AddModelError("", "Nieprawidłowe dane");
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
             var authHeader = Request.Headers["Authorization"].ToString();
             var student = await _context.Users.FirstOrDefaultAsync(u => "Bearer " + u.Token == authHeader);
-            
+
 
             if (student.AccountType != AccountType.stud.ToString())
             {
                 ModelState.AddModelError("", "Twój rodzaj konta nie może wykonać tej operacji");
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
-            if(student.TeamId != null)
+            if (student.TeamId != null)
             {
                 ModelState.AddModelError("", "Już należysz do zespołu!");
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
 
 
-            if(tT.TopicId != null)
+            if (tT.TopicId != null)
             {
                 var topic = await _context.Topics.FindAsync(tT.TopicId);
                 if (topic == null)
@@ -109,10 +112,10 @@ namespace Backend.Controllers
                 tT.Team.Topic = topic;
             }
             tT.Team.Students.Add(student);
-            
+
             _context.Teams.Add(tT.Team);
             await _context.SaveChangesAsync();
-            
+
             return CreatedAtAction("GetTeam", new { id = tT.Team.Id }, tT.Team);
         }
     }
