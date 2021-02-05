@@ -44,8 +44,26 @@ namespace ZPI_Database.DataAccess
                 .HasOne(u => u.Team)
                 .WithMany(t => t.Students);
 
+            // Unique fiels
+
+            // User
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
+                .IsUnique();
+
+            // Topic 
+            modelBuilder.Entity<Topic>()
+                .HasIndex(u => u.Name)
+                .IsUnique();
+
+            // Team
+            modelBuilder.Entity<Team>()
+                .HasIndex(u => u.Name)
+                .IsUnique();
+
+            // Token for database improvement
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Token)
                 .IsUnique();
         }
     }

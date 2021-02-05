@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZPI_Database.DataAccess;
 
 namespace ZPI_Database.Migrations
 {
     [DbContext(typeof(ZPIContext))]
-    partial class ZPIContextModelSnapshot : ModelSnapshot
+    [Migration("20210204000022_EfficiencyImprovement")]
+    partial class EfficiencyImprovement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -57,7 +57,8 @@ namespace Backend.Controllers
 
                     var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                    var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
+                    var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], 
+                        claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
 
                     var finalToken = new JwtSecurityTokenHandler().WriteToken(token);
 

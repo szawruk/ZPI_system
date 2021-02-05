@@ -21,7 +21,6 @@ namespace Backend
 {
     public class Startup
     {
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -32,6 +31,9 @@ namespace Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Cors Configuration
+            services.AddCors();
+
             // Json serializer configuration
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -48,19 +50,19 @@ namespace Backend
                 config.UseSqlServer(Configuration.GetConnectionString("DbConnection"));
             });
 
-            // !!! TO-DO !!!
-            services.AddCors(options =>
-            {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                                  builder =>
-                                  {
-                                      builder.WithOrigins("http://localhost:8080",
-                                                          "http://localhost")
-                                                            .AllowAnyOrigin()
-                                                            .AllowAnyMethod()
-                                                            .AllowAnyHeader();
-                                  });
-            });
+            // Cors configuration
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy(name: MyAllowSpecificOrigins,
+            //                      builder =>
+            //                      {
+            //                          builder.WithOrigins("http://localhost:8080",
+            //                                              "http://localhost")
+            //                                                .AllowAnyOrigin()
+            //                                                .AllowAnyMethod()
+            //                                                .AllowAnyHeader();
+            //                      });
+            //});
 
             // Jwt token configuration
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -76,21 +78,20 @@ namespace Backend
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                 };
             });
-            //services.AddSingleton(x =>
-            //    new ValidateAuthorization(x.GetRequiredService<ZPIContext>())
-            //);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
+            app.UseCors(
+                options => options.WithOrigins("http://localhost", "http://localhost:8080")
+                .AllowAnyOrigin().AllowAnyMethod().AllowAnyMethod().AllowAnyHeader()
+            );
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors(MyAllowSpecificOrigins);
-
+          
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -102,9 +103,6 @@ namespace Backend
 
             app.UseMiddleware<ValidateAuthorization>();
 
-
-
-            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireAuthorization();

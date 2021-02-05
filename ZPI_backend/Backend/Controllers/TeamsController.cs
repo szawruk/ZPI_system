@@ -65,7 +65,8 @@ namespace Backend.Controllers
 
             if (user.Team == null)
             {
-                return NotFound();
+                ModelState.AddModelError("", "Twój rodzaj konta nie może wykonać tej operacji");
+                return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
 
             return user.Team;
@@ -96,9 +97,19 @@ namespace Backend.Controllers
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
 
-            var topic = await _context.Topics.FindAsync(tT.TopicId);
+
+            if(tT.TopicId != null)
+            {
+                var topic = await _context.Topics.FindAsync(tT.TopicId);
+                if (topic == null)
+                {
+                    ModelState.AddModelError("", "Taki temat nie istnieje!");
+                    return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
+                }
+                tT.Team.Topic = topic;
+            }
             tT.Team.Students.Add(student);
-            tT.Team.Topic = topic;
+            
             _context.Teams.Add(tT.Team);
             await _context.SaveChangesAsync();
             
