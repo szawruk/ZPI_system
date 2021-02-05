@@ -61,13 +61,14 @@ namespace Backend.Controllers
             var authHeader = Request.Headers["Authorization"].ToString();
             var user = await _context.Users.FirstOrDefaultAsync(u => "Bearer " + u.Token == authHeader);
 
-            var userToAssign = await _context.Users.FirstOrDefaultAsync(u => u.Id == task.StudentId && u.TeamId == user.TeamId);
-
             if (user.TeamId ==null)
             {
                 ModelState.AddModelError("", "Nie posiadasz zespołu, aby dodać zadanie");
                 return BadRequest(ErrorFunctionality.ObjectErrorReturn(400, ModelState.Values));
             }
+
+            var userToAssign = await _context.Users.FirstOrDefaultAsync(u => u.Id == task.StudentId && u.TeamId == user.TeamId);
+
             if (userToAssign == null)
             {
                 ModelState.AddModelError("", "Taki użytkownik nie istnieje w twoim zespole");

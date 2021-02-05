@@ -83,15 +83,15 @@ namespace Backend
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
+            app.UseCors(
+                options => options.WithOrigins("http://localhost", "http://localhost:8080")
+                .AllowAnyOrigin().AllowAnyMethod().AllowAnyMethod().AllowAnyHeader()
+            );
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors(
-                options => options.WithOrigins("http://localhost")
-                .AllowAnyMethod().AllowAnyMethod().AllowAnyHeader()                                           
-            );
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
