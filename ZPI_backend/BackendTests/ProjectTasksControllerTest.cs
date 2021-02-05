@@ -302,8 +302,6 @@ namespace BackendTests
 
             var res = ((ObjectResult)(taskController.GetTasks().Result.Result)).StatusCode;
 
-            var 
-
             Assert.Equal(400, res);
         }
     }
