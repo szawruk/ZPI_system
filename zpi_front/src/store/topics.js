@@ -35,7 +35,11 @@ export default {
     },
     actions: {
         getTopicsList({commit}) {
-            axios.get('/api/topics')
+            axios.get('/api/topics',{
+                headers:{
+                    authorization: 'Bearer ' + localStorage.getItem('tokennn')
+                }
+            })
                 .then(response => {
                     if(response.status === 200){
                         console.log(response.data)
@@ -44,7 +48,11 @@ export default {
                 })
         },
         saveTopic({commit}, data) {
-            axios.post('/api/topics', {Name: data.topicText, Description: data.descriptionText})
+            axios.post('/api/topics', {Name: data.topicText, Description: data.descriptionText},{
+                headers:{
+                    authorization: 'Bearer ' + localStorage.getItem('tokennn')
+                }
+            })
                 .then(response => {
                     console.log(response)
                     router.push('/topics').then()

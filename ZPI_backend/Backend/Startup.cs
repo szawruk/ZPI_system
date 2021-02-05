@@ -92,7 +92,7 @@ namespace Backend
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+          
             app.UseHttpsRedirection();
 
             app.UseRouting();
