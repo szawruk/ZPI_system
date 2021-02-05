@@ -91,7 +91,7 @@ namespace Backend
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+          
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -102,7 +102,6 @@ namespace Backend
 
 
             app.UseMiddleware<ValidateAuthorization>();
-
 
             app.UseEndpoints(endpoints =>
             {

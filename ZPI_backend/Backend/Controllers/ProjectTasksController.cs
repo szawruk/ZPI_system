@@ -30,7 +30,7 @@ namespace Backend.Controllers
             var authHeader = Request.Headers["Authorization"].ToString();
             var user = await _context.Users.FirstOrDefaultAsync(u => "Bearer " + u.Token == authHeader);
 
-            var tasks = _context.Tasks.Where(t => t.TeamId == user.TeamId);
+            var tasks = _context.Tasks.Where(t => t.TeamId == user.TeamId).Include(t => t.Student);
 
             if (tasks == null)
             {
